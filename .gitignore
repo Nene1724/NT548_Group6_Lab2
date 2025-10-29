@@ -1,0 +1,14 @@
+# Terraform local cache
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+
+# Provider executables (rất nặng)
+**/.terraform/*
+**/.terraform.lock.hcl
+
+# IDE files
+.vscode/
+.idea/
+*.log
