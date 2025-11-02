@@ -3,6 +3,11 @@ variable "security_group_ids" { type = list(string) }
 variable "key_name" {}
 variable "instance_name" {}
 variable "public_ip" { type = bool }
+variable "iam_instance_profile" {
+  description = "Optional IAM instance profile name to attach"
+  type        = string
+  default     = null
+}
 
 data "aws_ami" "amazon_linux" {
   owners      = ["amazon"]
@@ -24,6 +29,7 @@ resource "aws_instance" "this" {
   associate_public_ip_address = var.public_ip
   monitoring                  = true
   ebs_optimized               = true
+  iam_instance_profile        = var.iam_instance_profile
 
   metadata_options {
     http_endpoint               = "enabled"

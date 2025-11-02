@@ -8,7 +8,18 @@ variable "my_ip_cidr" {
   type        = string
 }
 
+variable "private_subnet_cidr" {
+  description = "CIDR block of the private subnet"
+  type        = string
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block of the VPC"
+  type        = string
+}
+
 resource "aws_security_group" "public_ssh" {
+  #checkov:skip=CKV2_AWS_5:Security group is attached to EC2 bastion instances via module outputs.
   name        = "lab02-public-ssh"
   description = "Allow SSH only from my IP"
   vpc_id      = var.vpc_id
@@ -22,10 +33,18 @@ resource "aws_security_group" "public_ssh" {
   }
 
   egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "SSH access to private subnet"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.private_subnet_cidr]
+  }
+
+  egress {
+    description = "HTTPS outbound for patching"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -35,6 +54,7 @@ resource "aws_security_group" "public_ssh" {
 }
 
 resource "aws_security_group" "private_internal" {
+  #checkov:skip=CKV2_AWS_5:Security group is attached to EC2 private instances via module outputs.
   name        = "lab02-private-internal"
   description = "Allow SSH only from public bastion"
   vpc_id      = var.vpc_id
@@ -48,11 +68,19 @@ resource "aws_security_group" "private_internal" {
   }
 
   egress {
-    description = "Allow all outbound traffic"
+    description = "Allow HTTPS outbound through NAT"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow VPC internal traffic"
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
   }
 
   tags = {
