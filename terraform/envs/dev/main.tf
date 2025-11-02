@@ -16,25 +16,44 @@ module "vpc" {
   cidr   = "10.0.0.0/16"
 }
 
-# Public subnet
+# Subnets
 module "subnets" {
-  source        = "../../modules/subnets"
-  vpc_id        = module.vpc.id
-  public_cidrs  = ["10.0.1.0/24"]
-  private_cidrs = []
+  source = "../../modules/subnets"
+  vpc_id = module.vpc.id
+
+  public_subnets = [
+    {
+      name = "lab02-public-1"
+      cidr = "10.0.1.0/24"
+    }
+  ]
+
+  private_subnets = [
+    {
+      name = "lab02-private-1"
+      cidr = "10.0.2.0/24"
+    }
+  ]
 }
 
-# IGW + route table public
+# IGW + NAT + route tables
 module "igw" {
   source = "../../modules/igw"
   vpc_id = module.vpc.id
 }
 
+module "nat" {
+  source           = "../../modules/nat"
+  public_subnet_id = module.subnets.public_ids[0]
+}
+
 module "route_tables" {
-  source            = "../../modules/route_tables"
-  vpc_id            = module.vpc.id
-  igw_id            = module.igw.id
-  public_subnet_ids = module.subnets.public_ids
+  source             = "../../modules/route_tables"
+  vpc_id             = module.vpc.id
+  igw_id             = module.igw.id
+  nat_gateway_id     = module.nat.id
+  public_subnet_ids  = module.subnets.public_ids
+  private_subnet_ids = module.subnets.private_ids
 }
 
 # SG: chỉ cho SSH từ IP của bạn
@@ -50,11 +69,36 @@ module "ec2_public" {
   subnet_id          = module.subnets.public_ids[0]
   security_group_ids = [module.sg.public_ssh_sg_id]
   key_name           = var.key_name
-  instance_name      = "group6-public"
+  instance_name      = "lab02-public-bastion"
   public_ip          = true
 }
 
+module "ec2_private" {
+  source             = "../../modules/ec2"
+  subnet_id          = module.subnets.private_ids[0]
+  security_group_ids = [module.sg.private_ssh_sg_id]
+  key_name           = var.key_name
+  instance_name      = "lab02-private-app"
+  public_ip          = false
+}
+
 # outputs tiện xem
-output "public_instance_id" { value = module.ec2_public.instance_id }
-output "public_instance_ip" { value = module.ec2_public.public_ip }
-output "vpc_id" { value = module.vpc.id }
+output "vpc_id" {
+  value = module.vpc.id
+}
+
+output "public_instance_id" {
+  value = module.ec2_public.instance_id
+}
+
+output "public_instance_ip" {
+  value = module.ec2_public.public_ip
+}
+
+output "private_instance_id" {
+  value = module.ec2_private.instance_id
+}
+
+output "private_instance_private_ip" {
+  value = module.ec2_private.private_ip
+}
