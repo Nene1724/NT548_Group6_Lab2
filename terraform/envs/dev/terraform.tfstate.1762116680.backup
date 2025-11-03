@@ -1,0 +1,135 @@
+{
+  "version": 4,
+  "terraform_version": "1.13.4",
+  "serial": 55,
+  "lineage": "c734dd47-605c-6deb-5c65-ad3a47043e99",
+  "outputs": {},
+  "resources": [
+    {
+      "module": "module.igw",
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-2:136312924479:internet-gateway/igw-02cbf629e4d2ab9e2",
+            "id": "igw-02cbf629e4d2ab9e2",
+            "owner_id": "136312924479",
+            "tags": {
+              "Name": "igw-lab02"
+            },
+            "tags_all": {
+              "Name": "igw-lab02"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-0e4e278ef276734e1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.subnets",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "index_key": "lab02-public-1",
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-2:136312924479:subnet/subnet-083755898e5936e67",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "ap-southeast-2a",
+            "availability_zone_id": "apse2-az1",
+            "cidr_block": "10.0.1.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-083755898e5936e67",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_native": false,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "136312924479",
+            "private_dns_hostname_type_on_launch": "ip-name",
+            "tags": {
+              "Name": "lab02-public-1",
+              "Tier": "public"
+            },
+            "tags_all": {
+              "Name": "lab02-public-1",
+              "Tier": "public"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-0e4e278ef276734e1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc",
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-2:136312924479:vpc/vpc-0e4e278ef276734e1",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "10.0.0.0/16",
+            "default_network_acl_id": "acl-0c65d2de7938cec15",
+            "default_route_table_id": "rtb-0b126776b218e2c59",
+            "default_security_group_id": "sg-0509f71cde4ccfd0d",
+            "dhcp_options_id": "dopt-0fe1e93fc2d104f1f",
+            "enable_dns_hostnames": true,
+            "enable_dns_support": true,
+            "enable_network_address_usage_metrics": false,
+            "id": "vpc-0e4e278ef276734e1",
+            "instance_tenancy": "default",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_network_border_group": "",
+            "ipv6_ipam_pool_id": "",
+            "ipv6_netmask_length": 0,
+            "main_route_table_id": "rtb-0b126776b218e2c59",
+            "owner_id": "136312924479",
+            "tags": {
+              "Name": "lab02-vpc"
+            },
+            "tags_all": {
+              "Name": "lab02-vpc"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
