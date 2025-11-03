@@ -22,7 +22,7 @@ data "aws_ami" "amazon_linux" {
 resource "aws_instance" "this" {
   #checkov:skip=CKV_AWS_88:The bastion use-case requires a public IP when var.public_ip is true for remote access.
   ami                         = data.aws_ami.amazon_linux.id
-  instance_type               = "t4g.micro"
+  instance_type               = "t2.micro"
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = var.security_group_ids
   key_name                    = var.key_name
